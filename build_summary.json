@@ -1,0 +1,184 @@
+{
+  "design": "36 mm rocket body joining the 18 mm motor can and the 36 mm 4-fin can",
+  "stl": "/home/jayk/Documents/FreeCad-Docs/36mm-rocket-body/body36.stl",
+  "gauge_stl": "/home/jayk/Documents/FreeCad-Docs/36mm-rocket-body/body36_gauge.stl",
+  "anchor_stl": "/home/jayk/Documents/FreeCad-Docs/36mm-rocket-body/body36_cord_anchor.stl",
+  "step": "/home/jayk/Documents/FreeCad-Docs/36mm-rocket-body/body36.step",
+  "fcstd": "/home/jayk/Documents/FreeCad-Docs/36mm-rocket-body/body36.FCStd",
+  "valid": true,
+  "solids": 1,
+  "volume_mm3": 49218.69,
+  "area_mm2": 61865.26,
+  "len": 285.0,
+  "od": 36.0,
+  "bore": 32.8,
+  "wall": 1.6,
+  "taper_half_angle_deg": 2.148,
+  "rim_wall": 1.45,
+  "mass_g_pla": 61.0,
+  "mass_g_petg": 62.5,
+  "bed_contact_mm2": 128.2,
+  "checks_pass": true,
+  "checks": [
+    {
+      "name": "body is one valid solid",
+      "pass": true,
+      "detail": "solids=1 valid=True"
+    },
+    {
+      "name": "length is 285.0 mm",
+      "pass": true,
+      "detail": "bbox z 0.00..285.00"
+    },
+    {
+      "name": "volume matches the revolved analytic tube",
+      "pass": true,
+      "detail": "+0.00000%"
+    },
+    {
+      "name": "OD measures 36.00 (fin can slip)",
+      "pass": true,
+      "detail": "worst deviation 0.0000 mm"
+    },
+    {
+      "name": "bore measures 32.80",
+      "pass": true,
+      "detail": "worst deviation 0.0000 mm"
+    },
+    {
+      "name": "36 mm fin can (bore 36.60) slides over the aft 102 mm",
+      "pass": true,
+      "detail": "interference 0.000000 mm3, slip 0.30 mm/side"
+    },
+    {
+      "name": "fin can fit test is live (a 0.1 mm tight bore collides)",
+      "pass": true,
+      "detail": "447.18 mm3"
+    },
+    {
+      "name": "18 mm motor can sleeve (32.50 x 15) enters the bore",
+      "pass": true,
+      "detail": "interference 0.000000 mm3, fit 0.15 mm/side"
+    },
+    {
+      "name": "can flange (36.00) butts the aft rim at z=0",
+      "pass": true,
+      "detail": "flange spans z -3.00..0.00"
+    },
+    {
+      "name": "can flange clashing with the body rim face is nil",
+      "pass": true,
+      "detail": "0.000000 mm3"
+    },
+    {
+      "name": "motor can fit test is live (a 0.5 mm oversize sleeve collides)",
+      "pass": true,
+      "detail": "155.04 mm3"
+    },
+    {
+      "name": "nose cone shoulder (32.50 x 15) enters the forward end",
+      "pass": true,
+      "detail": "interference 0.000000 mm3, fit 0.15 mm/side"
+    },
+    {
+      "name": "nose fit test is live (a 0.5 mm oversize shoulder collides)",
+      "pass": true,
+      "detail": "149.35 mm3"
+    },
+    {
+      "name": "retainer cap (35.00) clears the fin can bore by 0.80 mm/side",
+      "pass": true,
+      "detail": "0.80 mm"
+    },
+    {
+      "name": "chute bay / charge path is an unbroken 32.80 mm bore",
+      "pass": true,
+      "detail": "min free diameter 32.80 mm at z=128"
+    },
+    {
+      "name": "cord anchor leaves >= 26 mm of throat for the chute",
+      "pass": true,
+      "detail": "throat 27.70 mm"
+    },
+    {
+      "name": "cord anchor fits inside the bore it is glued into",
+      "pass": true,
+      "detail": "interference 0.000000 mm3, glue gap 0.15 mm/side"
+    },
+    {
+      "name": "cord anchor sits forward of the motor can's block (76 mm)",
+      "pass": true,
+      "detail": "110.0 mm"
+    },
+    {
+      "name": "cord anchor stays out of the nose shoulder bay",
+      "pass": true,
+      "detail": "top at z=140.0, bay starts 270.0"
+    },
+    {
+      "name": "body needs no supports (no off-bed downward face below 40 deg",
+      "pass": true,
+      "detail": "bed contact 128.2 mm2"
+    },
+    {
+      "name": "cord anchor needs no supports (cord-slot roofs bridge)",
+      "pass": true,
+      "detail": "bed contact 69.3 mm2"
+    },
+    {
+      "name": "gauge needs no supports",
+      "pass": true,
+      "detail": "bed contact 65.2 mm2"
+    }
+  ],
+  "fits": {
+    "fincan_slip_per_side": 0.3,
+    "motor_can_sleeve_per_side": 0.15,
+    "nose_shoulder_per_side": 0.15,
+    "cap_to_fincan_bore": 0.8
+  },
+  "params": {
+    "body_od": 36.0,
+    "body_bore": 32.8,
+    "body_len": 285.0,
+    "aft_od_chamfer": 0.4,
+    "fwd_taper_len": 4.0,
+    "fwd_bore_chamfer": 0.6,
+    "nose_base_d": 35.7,
+    "nose_shoulder_d": 32.5,
+    "nose_shoulder_len": 15.0,
+    "can_sleeve_d": 32.5,
+    "can_sleeve_len": 15.0,
+    "can_flange_d": 36.0,
+    "can_flange_len": 3.0,
+    "can_stem_d": 25.0,
+    "can_stem_len": 12.0,
+    "can_cap_d": 35.0,
+    "can_cap_len": 16.0,
+    "fincan_bore": 36.6,
+    "fincan_len": 102.0,
+    "fincan_hub_od": 41.4,
+    "anchor_enabled": true,
+    "anchor_z": 110.0,
+    "anchor_len": 30.0,
+    "anchor_arc": 110.0,
+    "anchor_thick": 2.4,
+    "anchor_gap": 0.15,
+    "anchor_slot_len": 4.0,
+    "anchor_slot1_z": 9.0,
+    "anchor_slot2_z": 21.0,
+    "gauge_len": 20.0,
+    "printer_z": 300.0,
+    "min_wall": 1.2
+  },
+  "facets": {
+    "body36.stl": 912,
+    "body36_gauge.stl": 940,
+    "body36_cord_anchor.stl": 268
+  },
+  "stl_sha256": {
+    "body36.stl": "4a9076f45d75a42814cf389737218b48212c05f0b5d6fddeb7d07cb18ca8b9f2",
+    "body36_gauge.stl": "f7ef73e8de7d81da90f7a7b66b44150b0e4696e899a3ba9e1c80ebf109ca7792",
+    "body36_cord_anchor.stl": "9d4aa4164fe308bfb753101b06df4b868c2c48932904ed5c5d7d4f2037b05353"
+  }
+}
