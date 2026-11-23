@@ -12,11 +12,11 @@ This is the airframe that joins the two existing printed parts:
   * 36 mm 4-fin can   (repo: 36mm-fin-can)    -> its 36.60 bore slips OVER the
                         aft 102 mm of this body.
 
-Geometry is defined by the FIT, not by taste: the fin can forces the outside to
-36.00 mm and the motor can's sleeve forces the bore to ~32.8 mm, so the wall is
-whatever those two leave (1.60 mm).  Everything below is checked against full
-size dummy models of both mating parts, so a parameter edit that breaks a fit
-refuses to export.
+Geometry is defined by the FIT, not by taste: the fin can's 36.60 bore forces the
+outside to at most 36.30 mm (0.15 mm/side slip) and the motor can's sleeve forces
+the bore to 32.8 mm, so the wall is whatever those two leave (1.75 mm on Rev B,
+1.60 on Rev A).  Everything below is checked against full size dummy models of
+both mating parts, so a parameter edit that breaks a fit refuses to export.
 
 Z axis = rocket axis.  Z=0 is the AFT end (motors come out here), +Z points
 FORWARD (toward the nose).  Print upright, aft end on the bed.
@@ -37,8 +37,11 @@ BASE = "body36"
 # ----------------------------------------------------------------- params
 P = {
     # ---- this part -------------------------------------------------------
-    "body_od":       36.0,   # OD.  The 36 mm fin can's bore is 36.60, so this
-                             # leaves 0.30 mm/side slip on the aft 102 mm.
+    "body_od":       36.30,  # OD.  Was 36.00; +0.30 mm on the outside only, to
+                             # thicken the wall (bore unchanged).  The 36 mm fin
+                             # can's bore is 36.60, so this leaves 0.15 mm/side
+                             # slip on the aft 102 mm - the tight end of the
+                             # range, see validate().
     "body_bore":     32.80,  # ID.  Accepts the motor can's 32.50 sleeve and the
                              # nose cone's 32.50 x 15 shoulder (0.15 mm/side).
     "body_len":     285.0,   # overall.  Printer Z is 300 mm; anything longer

@@ -147,9 +147,9 @@ s.append('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="#7d5210" '
          if False else "")
 s.append(text(X(50), Y(FIN_TIP_R) - 7, "fin tip 89.40 across", 10.5, "middle", "#7d5210"))
 
-s.append(leader(150, BODY_OD / 2.0, X(150) - 44, Y(30), "Ø36.00 body OD", "#22405c"))
-s.append(leader(215, BORE / 2.0, X(215) + 6, Y_AX + 66, "Ø32.80 bore", "#22405c"))
-s.append(leader(40, FC_BORE / 2.0, X(120), Y_AX + 50, "Ø36.60 fin can bore", "#7d5210"))
+s.append(leader(150, BODY_OD / 2.0, X(150) - 44, Y(30), "Ø%.2f body OD" % BODY_OD, "#22405c"))
+s.append(leader(215, BORE / 2.0, X(215) + 6, Y_AX + 66, "Ø%.2f bore" % BORE, "#22405c"))
+s.append(leader(40, FC_BORE / 2.0, X(120), Y_AX + 50, "Ø%.2f fin can bore" % FC_BORE, "#7d5210"))
 s.append(leader(10, SLEEVE_D / 2.0, X(52), Y_AX + 86,
                 "sleeve Ø32.50 x 15", "#42582f"))
 

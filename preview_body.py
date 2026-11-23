@@ -20,7 +20,7 @@ def panel(stl, az, el, label, pw=430, ph=640):
 panels = [
     panel("body36_cord_anchor.stl", 35, 18, "CORD ANCHOR  (glue-in)"),
     panel("body36_gauge.stl", 35, 18, "FIT GAUGE  20 mm"),
-    panel("body36.stl", 35, 12, "BODY 36.00 OD / 32.80 BORE"),
+    panel("body36.stl", 35, 12, "BODY 36.30 OD / 32.80 BORE"),
     panel("body36.stl", 0, 89.9, "BODY - TOP DOWN (bore)"),
 ]
 sheet = np.concatenate(panels, axis=1)
