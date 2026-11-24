@@ -13,9 +13,9 @@ This is the airframe that joins the two existing printed parts:
                         aft 102 mm of this body.
 
 Geometry is defined by the FIT, not by taste: the fin can's 36.60 bore forces the
-outside to at most 36.30 mm (0.15 mm/side slip) and the motor can's sleeve forces
-the bore to 32.8 mm, so the wall is whatever those two leave (1.75 mm on Rev B,
-1.60 on Rev A).  Everything below is checked against full size dummy models of
+outside to at most 36.40 mm (0.10 mm/side slip) and the motor can's sleeve forces
+the bore to 32.8 mm, so the wall is whatever those two leave (1.80 mm on Rev C,
+1.75 on Rev B, 1.60 on Rev A).  Everything below is checked against full size dummy models of
 both mating parts, so a parameter edit that breaks a fit refuses to export.
 
 Z axis = rocket axis.  Z=0 is the AFT end (motors come out here), +Z points
@@ -37,11 +37,12 @@ BASE = "body36"
 # ----------------------------------------------------------------- params
 P = {
     # ---- this part -------------------------------------------------------
-    "body_od":       36.30,  # OD.  Was 36.00; +0.30 mm on the outside only, to
-                             # thicken the wall (bore unchanged).  The 36 mm fin
-                             # can's bore is 36.60, so this leaves 0.15 mm/side
-                             # slip on the aft 102 mm - the tight end of the
-                             # range, see validate().
+    "body_od":       36.40,  # OD.  Rev A 36.00, Rev B 36.30, Rev C 36.40: each
+                             # step widened the outside only (bore unchanged) to
+                             # take up measured slop in the printed fin can fit.
+                             # The 36 mm fin can's bore is 36.60, so this leaves
+                             # 0.10 mm/side slip on the aft 102 mm - see
+                             # validate() for why 0.10 is the floor.
     "body_bore":     32.80,  # ID.  Accepts the motor can's 32.50 sleeve and the
                              # nose cone's 32.50 x 15 shoulder (0.15 mm/side).
     "body_len":     285.0,   # overall.  Printer Z is 300 mm; anything longer
@@ -113,9 +114,13 @@ def validate(P):
 
     # the fin can slides OVER this body
     slip = (P["fincan_bore"] - od) / 2.0
-    if slip < 0.15:
+    # 0.10 mm/side, not 0.15: the printed Rev B body (36.30 OD) still slipped
+    # loosely in the printed fin can, so Rev C closes the gap.  A printed FDM
+    # tube runs ~0.05-0.1 mm small on the OD and the can's bore runs wide, so
+    # 0.10 of CAD slip is still clearance in the hand, not a press fit.
+    if slip < 0.10:
         e.append("fin can would seize: bore %.2f - body %.2f leaves %.2f mm/side "
-                 "(want >= 0.15)" % (P["fincan_bore"], od, slip))
+                 "(want >= 0.10)" % (P["fincan_bore"], od, slip))
     if slip > 0.60:
         e.append("fin can would be sloppy and glue-starved: %.2f mm/side "
                  "(want <= 0.60)" % slip)

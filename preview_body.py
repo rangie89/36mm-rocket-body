@@ -3,12 +3,20 @@
 
     python3 preview_body.py            -> preview_body.png
 """
+import json
 import os
 import numpy as np
 
 import stl_render as R
 
 OUT = os.path.dirname(os.path.abspath(__file__))
+
+# Read the caption dimensions from the build summary rather than hardcoding
+# them: a hardcoded "36.30 OD" is exactly the kind of label that survives a
+# revision change and lies to the reader.
+with open(os.path.join(OUT, "build_summary.json")) as f:
+    _S = json.load(f)
+BODY_LABEL = "BODY %.2f OD / %.2f BORE" % (_S["od"], _S["bore"])
 
 
 def panel(stl, az, el, label, pw=430, ph=640):
@@ -20,7 +28,7 @@ def panel(stl, az, el, label, pw=430, ph=640):
 panels = [
     panel("body36_cord_anchor.stl", 35, 18, "CORD ANCHOR  (glue-in)"),
     panel("body36_gauge.stl", 35, 18, "FIT GAUGE  20 mm"),
-    panel("body36.stl", 35, 12, "BODY 36.30 OD / 32.80 BORE"),
+    panel("body36.stl", 35, 12, BODY_LABEL),
     panel("body36.stl", 0, 89.9, "BODY - TOP DOWN (bore)"),
 ]
 sheet = np.concatenate(panels, axis=1)

@@ -8,17 +8,27 @@ that is a 435 mm rocket on a 36 mm airframe.
 Nothing here is a matter of taste: the two existing printed parts fix the
 diameter from both sides, and everything else follows.
 
-**Rev B (2026-11-24): OD 36.00 → 36.30 mm.** +0.30 mm on the outside only, so
-the wall went 1.60 → 1.75 mm and the bore stayed at 32.80. Rev A (36.00) and
-Rev B (36.30) are told apart with calipers on the OD; the gauge and the launch
-lug (`36mm-launch-lug`) both track it. Two consequences to know before printing:
+**Rev C (2026-11-24): OD 36.30 → 36.40 mm.** The printed Rev B body still felt
+slightly loose in the fin can, so this closes another 0.10 mm — again on the
+outside only, so the wall went 1.75 → 1.80 mm and the bore stayed at 32.80. The
+gauge and the launch lug (`36mm-launch-lug`) both track it. Three consequences
+to know before printing:
 
-* the fin can now has **0.15 mm/side** slip instead of 0.30 — the tight end of
-  the allowed range (`validate()` refuses below 0.15), so dry-fit Rev B in the
-  fin can before you commit a 285 mm print;
-* the 18 mm motor can's 36.00 flange is now 0.30 mm inside the body's OD, so the
-  aft rim stands 0.15 mm proud of the flange, and the forward fairing to the
-  nose cone's 35.70 base is a 0.30 mm radial step over 4 mm (4.3°, was 2.1°).
+* the fin can now has **0.10 mm/side** slip — the floor of the allowed range
+  (`validate()` refuses below 0.10), so dry-fit Rev C in the fin can before you
+  commit a 285 mm print. **Rev C is the widest this body can go**: the fin can's
+  36.60 bore leaves 0.20 mm total, and anything more than 36.40 seizes;
+* the 18 mm motor can's 36.00 flange is now 0.40 mm inside the body's OD, so the
+  aft rim stands 0.20 mm proud of the flange, and the forward fairing to the nose
+  cone's 35.70 base is a 0.35 mm radial step over 4 mm (5.0°, was 4.3° on Rev B,
+  2.1° on Rev A);
+* the printed body is 2 g heavier: 69 g PLA / 70.7 g PETG.
+
+Rev A (36.00), Rev B (36.30) and Rev C (36.40) are told apart with calipers on
+the OD. **Rev A and Rev B are superseded** — do not mix them with Rev C parts.
+
+**Rev B (2026-11-24): OD 36.00 → 36.30 mm.** +0.30 mm on the outside only, so
+the wall went 1.60 → 1.75 mm and the bore stayed at 32.80. Superseded by Rev C.
 
 ![interface section](interface_section.png)
 
@@ -26,46 +36,44 @@ lug (`36mm-launch-lug`) both track it. Two consequences to know before printing:
 
 | mating part | what it needs | what this body gives | clearance |
 |---|---|---|---|
-| 36 mm 4-fin can (`36mm-fin-can`) | bore 36.60 over a **36.30 OD** tube | OD 36.30 | **0.15 mm/side** slip |
-| 18 mm motor can (`18mm-motor-can`) | 32.50 × 15 sleeve into the tube **and** a 36.00 flange on the rim | bore 32.80, OD 36.30 | **0.15 mm/side**, flange 0.30 mm inside the OD |
+| 36 mm 4-fin can (`36mm-fin-can`) | bore 36.60 over a **36.40 OD** tube | OD 36.40 | **0.10 mm/side** slip |
+| 18 mm motor can (`18mm-motor-can`) | 32.50 × 15 sleeve into the tube **and** a 36.00 flange on the rim | bore 32.80, OD 36.40 | **0.15 mm/side**, flange 0.40 mm inside the OD |
 | printed nose cone (v1) | 32.50 × 15 shoulder, 35.70 base | bore 32.80, forward rim faired to 35.70 | **0.15 mm/side** |
 | 18 mm motor can's retainer cap | OD 35.00, it must be turnable inside the fin can's mouth | fin can bore 36.60 | 0.80 mm |
 
 That table is the whole design. The bore is not free: 32.80 is the *narrowest*
 bore the motor can's sleeve and the nose cone's shoulder both still enter
-(0.15 mm/side), and 36.30 OD is the *widest* the fin can still slips over at the
-0.15/side floor (`fincan_bore` 36.60 − 2 × 0.15). Subtract them and the wall is
-**1.75 mm** — with the bore pinned by the can and the nose cone, and the OD
-pinned by the fin can, it has no choice. Rev B sits exactly on that ceiling; a
-third of a millimetre more and `validate()` refuses to build.
+(0.15 mm/side), and 36.40 OD is the *widest* the fin can still slips over at the
+0.10/side floor (`fincan_bore` 36.60 − 2 × 0.10). Subtract them and the wall is
+**1.80 mm** — with the bore pinned by the can and the nose cone, and the OD
+pinned by the fin can, it has no choice. Rev C sits exactly on that ceiling; a
+tenth of a millimetre more and `validate()` refuses to build.
 
-The 18 mm motor can's flange is 36.00 against this body's 36.30 OD. It is still
+The 18 mm motor can's flange is 36.00 against this body's 36.40 OD. It is still
 the thrust path — the flange butts the aft rim, so the motor pushes the rim in
-compression instead of pulling on four square millimetres of glue — but on Rev B
-the flange no longer covers the rim's full width: it presses on the annulus
-32.80 → 36.00 and the outer 0.15 mm ring of the rim is left uncovered. The
-contact area is 3.20 mm × 113 mm around instead of 1.60 mm; the rim face itself
-is 1.75 mm wide by 113 mm around.
+compression instead of pulling on four square millimetres of glue — but on Rev C
+the flange covers less of the rim's width: it presses on the annulus 32.80 →
+36.00 (1.60 mm wide, ~178 mm² of contact) and the outer 0.20 mm ring of the rim
+is left uncovered. The rim face itself is 1.80 mm wide by ~113 mm around.
 
 ## Read this before you print it: mass
 
 | | mass |
 |---|---|
-| printed body, 1.75 mm solid wall (this file) | **67 g PLA / 68.6 g PETG** |
+| printed body, 1.80 mm solid wall (this file) | **69 g PLA / 70.7 g PETG** |
 | same tube in cardboard, 285 mm | ~20-22 g |
 | nose cone as printed | 22.6 g |
 | 36 mm fin can (PETG) | ~44 g |
 | 18 mm motor can + cap (PETG) | 38.1 g |
 | Estes C6-5 | 24 g |
-| **flying mass with the printed body** | **~197 g** |
+| **flying mass with the printed body** | **~199 g** |
 | **Estes C6-5 maximum liftoff weight** | **113 g** |
 
-The wall is 1.75 mm, which is four 0.4 mm perimeters plus a sliver — the slicer
-will gap-fill the remainder, or set 5 × 0.35 mm lines and get it exactly — so
-**0 % infill does not help**. A printed body of this size is a solid-wall tube
-and there is no infill trick that changes it. At ~197 g the printed version is
-174 % of the C6-5 limit and will not fly safely; even swapping in a cardboard
-tube leaves ~151 g, still over.
+The wall is 1.80 mm, which is four 0.45 mm perimeters or 4.5 × 0.4 mm lines —
+the slicer will gap-fill the remainder — so **0 % infill does not help**. A
+printed body of this size is a solid-wall tube and there is no infill trick that
+changes it. At ~199 g the printed version is 176 % of the C6-5 limit and will
+not fly safely; even swapping in a cardboard tube leaves ~151 g, still over.
 
 So be clear about what this part is for:
 
@@ -76,7 +84,7 @@ So be clear about what this part is for:
   ~160-200 g you actually weigh), or a lighter airframe.
 
 If you want to fly it on a C6, use the cardboard tube instead. The bore/OD pair
-in the table above is the spec to buy or roll to (36.30 OD, 32.80 ID, 1.75 wall,
+in the table above is the spec to buy or roll to (36.40 OD, 32.80 ID, 1.80 wall,
 285 long) — the two printed cans and the nose cone drop straight onto it, and
 this repo already carries the fit gauge to check the tube in your hand before
 you commit a 285 mm cut.
@@ -112,23 +120,23 @@ identical hashes), which is what makes the check meaningful.
 
 | z (mm) | feature | OD / bore |
 |---|---|---|
-| 0 | **aft rim** — the motor can's flange butts here, the fin can slides on here | OD 36.30 / bore 32.80, 0.4 mm OD chamfer |
+| 0 | **aft rim** — the motor can's flange butts here, the fin can slides on here | OD 36.40 / bore 32.80, 0.4 mm OD chamfer |
 | 0 – 15 | where the motor can's 32.5 sleeve is glued in | bore 32.80 |
-| 0 – 102 | covered by the 36 mm fin can | OD 36.30 |
+| 0 – 102 | covered by the 36 mm fin can | OD 36.40 |
 | 0 – 76 | inside: the motor can's block ends 76 mm in | — |
 | 110 – 140 | cord anchor glues in (see Recovery) | bore 32.80, anchor throat 27.70 |
 | 270 – 285 | nose cone shoulder bay (fits the 32.5 × 15 shoulder) | bore 32.80 |
-| 281 – 285 | forward rim fairing 36.30 → 35.70 to meet the nose cone's base | rim wall 1.45 |
+| 281 – 285 | forward rim fairing 36.40 → 35.70 to meet the nose cone's base | rim wall 1.45 |
 | 285 | forward rim, 0.6 mm bore lead-in | OD 35.70 |
 
-Overall 285 mm, 36.30 OD, 32.80 bore, 1.75 wall. Volume 54.07 cm³, area 621.5 cm².
+Overall 285 mm, 36.40 OD, 32.80 bore, 1.80 wall. Volume 55.66 cm³, area 622.4 cm².
 
 ## Printing
 
 * **Body:** upright, aft face on the bed, **no supports anywhere**. 0.2 mm
   layers, 4 perimeters (the wall is four lines plus a gap-fill sliver — that is
   the part), 0 % infill, 4-5 top/bottom layers, 5 mm brim (bed contact is a
-  1.75 mm annulus, 144.8 mm²). ~3-4 h.
+  1.80 mm annulus, 150.4 mm²). ~3-4 h.
   PETG for preference, or ASA/ABS: the aft 100 mm wraps the motor.
 * **Print the gauge first.** 20 minutes and 4.3 g tells you whether the fin can
   slips on and whether the motor can's sleeve and the nose shoulder enter,
@@ -150,9 +158,11 @@ Overall 285 mm, 36.30 OD, 32.80 bore, 1.75 wall. Volume 54.07 cm³, area 621.5 c
    seat. The motor can must go in **before** the fin can, or you cannot reach
    the joint.
 3. **Fin can.** Slides over the aft 102 mm from the aft end, aft face flush with
-   the body's aft rim. On Rev B that is only **0.15 mm/side** — a firm push fit,
-   not the loose 0.30 of Rev A. Check the body actually mics 36.30 first (the
-   gauge did that), sand the tube lightly if it drags, epoxy it.
+   the body's aft rim. On Rev C that is only **0.10 mm/side** — a firm push fit,
+   the tightest this can be and still go on. Check the body actually mics 36.40
+   first (the gauge did that), sand the tube lightly if it drags, epoxy it. If a
+   printed Rev C still feels loose, the fin can's bore is the part to re-mic —
+   there is no room to widen the body further.
 4. **Cord anchor.** Glue at 110 mm up the tube (its aft face), 0.15 mm/side glue
    gap. Thread the shock cord in one 4 mm slot and out the other, over the 8 mm
    bridge, and knot it aft of the anchor. The cord then runs forward through the
@@ -188,7 +198,7 @@ tube and its 36.60 bore leaves 0.80 mm/side on a 35.0 tube — glueable but slop
 and it changes the forward fairing's step. Two honest options, in order of
 preference:
 
-1. get the 36.30 OD / 32.80 bore tube (the spec above), or print this body;
+1. get the 36.40 OD / 32.80 bore tube (the spec above), or print this body;
 2. re-dimension the fin can (`build_fincan_36mm.py`: `tube_od` 36.0 → 35.0)
    and print a new can. The motor can and nose cone already fit that tube.
 
@@ -197,22 +207,23 @@ preference:
 | rev | OD | bore | wall | note |
 |---|---|---|---|---|
 | A | 36.00 | 32.80 | 1.60 | as first printed; 0.30 mm/side fin-can slip |
-| **B** | **36.30** | 32.80 | **1.75** | +0.30 mm outside for the printed tube's fit; fin-can slip now 0.15/side. Gauge, STLs and the launch lug all rebuilt |
+| B | 36.30 | 32.80 | 1.75 | +0.30 mm outside for the printed tube's fit; fin-can slip 0.15/side. Gauge, STLs and the launch lug all rebuilt |
+| **C** | **36.40** | 32.80 | **1.80** | +0.10 mm outside after the printed Rev B still felt loose in the fin can; slip now 0.10/side, the hard ceiling. Gauge, STLs and the launch lug rebuilt |
 
 ## What was verified
 
 22 checks, all passing on every build (`build_summary.json` carries them all
 with their details). The interesting ones:
 
-* **volume exact** — 54067.3 mm³ expected from the revolved tube + frustum minus
-  the bore, against 54067.3 measured, **+0.00000 %**;
+* **volume exact** — 55683.1 mm³ expected from the revolved tube + frustum minus
+  the bore, against 55683.1 measured, **+0.00000 %**;
 * **OD and bore measured off the built solid**, by bisection at five heights:
-  36.300 and 32.800 everywhere, including the 4.3° forward fairing
+  36.400 and 32.800 everywhere, including the 5.0° forward fairing
   (35.850 at z=284, 35.730 at 284.8) — the STL cannot show a taper, the solid
   can;
 * **fin can fit, full size**: a 36.60 bore × 102 dummy slides over with
-  **0.000000 mm³** interference, 0.15 mm/side, and the test is live — a bore
-  0.1 mm tight collides for 450.92 mm³;
+  **0.000000 mm³** interference, 0.10 mm/side, and the test is live — a bore
+  0.1 mm tight collides for 452.17 mm³;
 * **motor can fit, full size**: the 32.50 × 15 sleeve enters with **0.000000
   mm³**, a 0.5 mm oversize sleeve collides for 155.04 mm³, and the 36.00 flange
   spans z −3.00…0.00, i.e. its forward face is exactly on the rim;
@@ -221,7 +232,7 @@ with their details). The interesting ones:
 * **charge path**: a 1 mm scan of the bore from the motor can's block (76 mm) to
   the nose bay (270 mm) never finds material — min free diameter 32.80;
 * **printability from the solid's faces, not assumed**: the body has exactly
-  two downward-facing faces (the bed ring; 144.8 mm² of contact) and **no
+  two downward-facing faces (the bed ring; 150.4 mm² of contact) and **no
   off-bed downward face at all**, so no supports. The cord anchor's only
   shallow faces are the two cord-slot roofs, 9.63 mm² each, which bridge.
 
