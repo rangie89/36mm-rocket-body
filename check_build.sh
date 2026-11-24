@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Is the committed geometry what build_body_36mm.py actually produces?
+# Is the committed geometry what build_body_36mm_split.py actually produces?
 #
 #   ./check_build.sh          -> IN SYNC / OUT OF SYNC, and it diffs the hashes
 #
@@ -32,8 +32,8 @@ import json
 old = json.load(open("/tmp/body36_summary_backup.json"))
 new = json.load(open("build_summary.json"))
 a, b = old["stl_sha256"], new["stl_sha256"]
-name = {"body36.stl": "body", "body36_gauge.stl": "gauge",
-        "body36_cord_anchor.stl": "cord anchor"}
+name = {"body36_aft.stl": "aft body", "body36_fwd.stl": "fwd body",
+        "body36_gauge.stl": "gauge", "body36_cord_anchor.stl": "cord anchor"}
 bad = []
 for k in sorted(a):
     same = a.get(k) == b.get(k)
