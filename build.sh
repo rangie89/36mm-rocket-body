@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# Rebuild the 36 mm rocket body from build_body_36mm.py and show the verification.
+# Rebuild the 36 mm rocket body (split, keyed joint) from build_body_36mm_split.py
+# and show the verification.
 #
 #   ./build.sh
 #
-# Edit the P dict at the top of build_body_36mm.py first, then run this.
+# Edit the P dict at the top of build_body_36mm_split.py first, then run this.
 # Override the FreeCAD build with:  FREECAD_APP=/path/to/FreeCAD.AppImage ./build.sh
 set -uo pipefail
 cd "$(dirname "$0")"
@@ -20,11 +21,11 @@ fi
 rm -rf __pycache__
 
 echo "FreeCAD: $APP"
-echo "Building from build_body_36mm.py ..."
+echo "Building from build_body_36mm_split.py ..."
 echo
 
 # stdin from /dev/null, or FreeCAD drops into its interactive console and lingers.
-"$APP" --console build_body_36mm.py < /dev/null > build.log 2>&1
+"$APP" --console build_body_36mm_split.py < /dev/null > build.log 2>&1
 rc=$?
 
 tr '\r' '\n' < build.log \
@@ -33,17 +34,17 @@ tr '\r' '\n' < build.log \
   | grep -av '^[[:space:]]*$'
 
 echo
-echo "=============== result ================"
+echo "=============== result ================="
 if [ "$rc" -ne 0 ]; then
   echo "BUILD REFUSED (exit $rc) - nothing was exported." >&2
   echo "Fix the parameter/check errors above, then run ./build.sh again." >&2
   exit "$rc"
 fi
-grep -aE '^params ok|^  body is one|^  volume|^  OD measures|^  bore measures|slides over|^  chute bay|^  body needs|^  cord anchor needs' \
+grep -aE '^params ok|^  body is one|^  volume|^  OD measures|^  bore measures|slides over|^  chute bay|^  body needs|^  cord anchor needs|^  cord anchor fits' \
   build.log | sed 's/^[[:space:]]*//'
 echo "---------------------------------------"
-ls -l --time-style=+%H:%M:%S body36*.stl body36.step
-for f in body36.stl body36_gauge.stl body36_cord_anchor.stl; do
+ls -l --time-style=+%H:%M:%S body36_aft.stl body36_fwd.stl body36_gauge.stl body36_cord_anchor.stl body36.step
+for f in body36_aft.stl body36_fwd.stl body36_gauge.stl body36_cord_anchor.stl; do
   echo "$f  sha256 $(sha256sum "$f" | cut -c1-16)"
 done
 python3 preview_body.py
