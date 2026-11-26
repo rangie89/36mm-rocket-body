@@ -28,8 +28,9 @@ def panel(stl, az, el, label, pw=430, ph=640):
 panels = [
     panel("body36_cord_anchor.stl", 35, 18, "CORD ANCHOR  (glue-in)"),
     panel("body36_gauge.stl", 35, 18, "FIT GAUGE  20 mm"),
-    panel("body36.stl", 35, 12, BODY_LABEL),
-    panel("body36.stl", 0, 89.9, "BODY - TOP DOWN (bore)"),
+    panel("body36_aft.stl", 35, 12, "AFT  " + BODY_LABEL),
+    panel("body36_fwd.stl", 35, 12, "FWD  " + BODY_LABEL),
+    panel("body36_fwd.stl", 0, 89.9, "FWD - TOP DOWN (bosses)"),
 ]
 sheet = np.concatenate(panels, axis=1)
 R.write_png(os.path.join(OUT, "preview_body.png"), sheet)

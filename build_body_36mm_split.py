@@ -83,6 +83,20 @@ P = {
     "key_radius":       4.0,    # key corner radius (top edge)
     "n_keys":           4,      # 4 keys at 90 deg
 
+    # ---- internal mounting points: M3 bosses on the BORE wall ------------
+    # A ring of pads that protrude inward from the bore, each with an axial
+    # M3 self-tapping pilot hole, so a bulkhead / shock-cord plate can be
+    # screwed to them from inside the tube.
+    "boss_enabled":      True,
+    "boss_count":         4,
+    "boss_z":          154.0,   # aft face of the pads (clear of the register)
+    "boss_len":         14.0,   # axial length of each pad
+    "boss_arc_deg":     30.0,   # circumferential width of each pad
+    "boss_depth":        5.0,   # radial protrusion inward from the bore
+    "boss_pilot_d":      2.7,   # M3 self-tapping pilot
+    "boss_pilot_deep":   9.0,   # axial depth, drilled from the aft face
+    "boss_phase_deg":   45.0,   # offset from the keys at 0/90/180/270
+
     # ---- machine limits / sanity ------------------------------------------
     "printer_z":      300.0,
     "min_wall":         1.20,   # 3 x 0.4 mm perimeters
@@ -260,6 +274,24 @@ def validate(P):
         e.append("key_height %.1f must fit in register_len %.1f with margin"
                  % (P["key_height"], P["register_len"]))
 
+    # internal mounting bosses
+    if P.get("boss_enabled"):
+        # bosses protrude INWARD from the bore, so the free bore shrinks
+        b_free = P["body_bore"] - 2.0 * P["boss_depth"]
+        if b_free < 20.0:
+            e.append("mounting bosses leave only %.2f mm free bore (want >= 20)"
+                     % b_free)
+        if P["boss_pilot_d"] + 2.0 > P["boss_depth"] + 0.1:
+            e.append("boss_depth %.2f too shallow for a %.2f pilot with 1 mm walls"
+                     % (P["boss_depth"], P["boss_pilot_d"]))
+        if P["boss_z"] < split_z + reg_len + 2.0:
+            e.append("boss_z %.1f clashes with the register (ends %.1f)"
+                     % (P["boss_z"], split_z + reg_len))
+        if P["boss_z"] + P["boss_len"] > P["body_len"] - P["nose_shoulder_len"] - 5.0:
+            e.append("mounting bosses run into the nose shoulder bay")
+        if P["boss_pilot_deep"] >= P["boss_len"] - 1.0:
+            e.append("boss_pilot_deep %.1f must be less than boss_len-1" % P["boss_pilot_deep"])
+
     if P["anchor_enabled"]:
         if P["anchor_z"] < 76.0 + 10.0:
             e.append("anchor_z %.1f sits on top of the motor can (block ends "
@@ -398,6 +430,44 @@ for i in range(n_keys):
     # The box is already positioned correctly: z from split_z to split_z+key_h
     fwd = fwd.cut(kw)
 
+# ---- internal mounting bosses on the bore wall (M3 pilot holes) ----------
+boss_delta = 0.0          # solid volume the pads add, for the volume check
+if P.get("boss_enabled"):
+    _vol_before_boss = fwd.Volume
+    print("== internal mounting bosses ==")
+    bz0 = P["boss_z"]
+    blen = P["boss_len"]
+    b_in = bore_r - P["boss_depth"]
+    pilot_r = P["boss_pilot_d"] / 2.0
+    half_a = math.radians(P["boss_arc_deg"]) / 2.0
+    # pilot hole sits 1.2 mm inboard of the boss's outer edge, so every wall
+    # around the hole is about a millimetre
+    rh = b_in + 1.2 + pilot_r
+    for i in range(P["boss_count"]):
+        a0 = math.radians(P["boss_phase_deg"] + i * 360.0 / P["boss_count"])
+        R = od_r + 2.0
+        pts = [Vector(0, 0, 0)]
+        for k in range(9):
+            a = a0 - half_a + 2.0 * half_a * k / 8.0
+            pts.append(Vector(R * math.cos(a), R * math.sin(a), 0))
+        wedge = Part.Face(Part.Wire(Part.makePolygon(pts, True))).extrude(
+            Vector(0, 0, blen))
+        wedge.translate(Vector(0, 0, bz0))
+        pad = Part.makeCylinder(bore_r, blen, Vector(0, 0, bz0)).cut(
+            Part.makeCylinder(b_in, blen + 2.0, Vector(0, 0, bz0 - 1.0)))
+        boss = pad.common(wedge)
+        if boss.Volume > 1e-6:
+            fwd = fwd.fuse(boss)
+        hole = Part.makeCylinder(
+            pilot_r, P["boss_pilot_deep"] + 1.0,
+            Vector(rh * math.cos(a0), rh * math.sin(a0), bz0 - 1.0))
+        fwd = fwd.cut(hole)
+    boss_delta = fwd.Volume - _vol_before_boss
+    print("  %d bosses: %d deg arc, %.1f mm deep, z %.1f..%.1f, %.1f mm pilot "
+          "-> +%.1f mm3 of material"
+          % (P["boss_count"], P["boss_arc_deg"], P["boss_depth"], bz0,
+             bz0 + blen, P["boss_pilot_d"], boss_delta))
+
 fwd = fwd.removeSplitter()
 
 print("  aft section: valid=%s solids=%d vol=%.1f mm3" %
@@ -497,7 +567,7 @@ pre_vol = solid.Volume
 v_out_cyl = math.pi * od_r ** 2 * (L - taper_len)
 v_out_cone = math.pi * taper_len / 3.0 * (od_r ** 2 + od_r * nose_r + nose_r ** 2)
 v_bore = math.pi * bore_r ** 2 * L
-expect = v_out_cyl + v_out_cone - v_bore
+expect = v_out_cyl + v_out_cone - v_bore + boss_delta
 err = 100.0 * (pre_vol - expect) / expect
 print("  volume: expected %.1f  measured %.1f  err %+.4f%%  (chamfers removed %.1f)"
       % (expect, pre_vol, err, pre_vol - solid.Volume))
@@ -659,6 +729,37 @@ if anchor is not None:
           ab.ZMax <= L - P["nose_shoulder_len"], "top at z=%.1f, bay starts %.1f"
           % (ab.ZMax, L - P["nose_shoulder_len"]))
 
+# ------------------------------------------------- internal mounting bosses
+if P.get("boss_enabled"):
+    b_in = bore_r - P["boss_depth"]
+    free_bore = 2.0 * b_in
+    check("mounting bosses leave >= 20 mm free bore", free_bore >= 20.0,
+          "%.1f mm free at %d pads" % (free_bore, P["boss_count"]))
+    # the pilot hole must actually be open
+    rh = b_in + 1.2 + P["boss_pilot_d"] / 2.0
+    a0 = math.radians(P["boss_phase_deg"])
+    ok_hole = True
+    for i in range(P["boss_count"]):
+        aa = a0 + math.radians(i * 360.0 / P["boss_count"])
+        pt = Vector(rh * math.cos(aa), rh * math.sin(aa),
+                    P["boss_z"] + P["boss_len"] / 2.0)
+        if solid.isInside(pt, 1e-6, False):
+            ok_hole = False
+    check("M3 pilot holes are open in every boss", ok_hole,
+          "%d x %.1f mm dia, drilled from the aft face" % (P["boss_count"],
+                                                           P["boss_pilot_d"]))
+    check("pilot hole leaves >= 1 mm of wall each side",
+          P["boss_depth"] - P["boss_pilot_d"] >= 2.0,
+          "%.1f mm of boss around a %.1f mm hole"
+          % (P["boss_depth"], P["boss_pilot_d"]))
+    check("mounting bosses clear the cord anchor",
+          P["boss_z"] >= P["anchor_z"] + P["anchor_len"],
+          "anchor ends z=%.1f, pads start z=%.1f"
+          % (P["anchor_z"] + P["anchor_len"], P["boss_z"]))
+    check("mounting bosses stay forward of the joint register",
+          P["boss_z"] > split_z + reg_len,
+          "register ends z=%.1f, pads start z=%.1f" % (split_z + reg_len, P["boss_z"]))
+
 # ------------------------------------------------------ printability
 ANGLE_OK = 40.0
 
@@ -717,10 +818,16 @@ def printability(shape, label, bridge_area=0.0):
 
 
 print("== printability ==")
-# Accept register face ledges and key tops as expected bridges
+# Accept the register-face ledges, the key tops and the mounting-boss
+# undersides as expected bridges: each boss presents a ~6 x 5 mm horizontal
+# underside, which bridges on any modern FDM machine.
 reg_bridge = P["key_width"] * P["key_height"] * 1.2
+boss_bridge = 0.0
+if P.get("boss_enabled"):
+    arc_mm = 2.0 * math.pi * (bore_r - P["boss_depth"]) * P["boss_arc_deg"] / 360.0
+    boss_bridge = arc_mm * P["boss_depth"] * 1.3
 print_ok, bed_area = printability(solid, "body",
-                                 bridge_area=reg_bridge)
+                                 bridge_area=reg_bridge + boss_bridge)
 check("body needs no supports (no off-bed downward face below %.0f deg" % ANGLE_OK,
       print_ok, "bed contact %.1f mm2" % bed_area)
 if anchor is not None:
@@ -868,6 +975,12 @@ summary = {
         "key_count": n_keys,
         "key_width": key_w, "key_depth": key_d, "key_height": key_h,
         "male_od": round(2*male_od_r, 3), "female_od": round(2*female_od_r, 3),
+        "boss_count": P["boss_count"] if P.get("boss_enabled") else 0,
+        "boss_z": P["boss_z"] if P.get("boss_enabled") else None,
+        "boss_depth": P["boss_depth"] if P.get("boss_enabled") else None,
+        "boss_pilot_d": P["boss_pilot_d"] if P.get("boss_enabled") else None,
+        "boss_free_bore": (round(2*(bore_r - P["boss_depth"]), 2)
+                           if P.get("boss_enabled") else None),
     },
     "fits": {
         "fincan_slip_per_side": round((fc_bore - od_r), 3),

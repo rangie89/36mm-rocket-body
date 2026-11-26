@@ -32,6 +32,44 @@ the wall went 1.60 → 1.75 mm and the bore stayed at 32.80. Superseded by Rev C
 
 ![interface section](interface_section.png)
 
+## Split variant: two halves with a keyed joint + M3 mounting pads
+
+`build_body_36mm_split.py` builds the same airframe as **two printable halves**
+that glue together, so the 285 mm tube no longer needs a tall, tippy print:
+
+| part | z range | what's on it |
+|---|---|---|
+| `body36_aft.stl` | 0 – 142.5 mm | motor can sleeve, fin can register, aft register taper, 4 male keys |
+| `body36_fwd.stl` | 142.5 – 285 mm | female register, 4 keyways, **4 internal M3 mounting pads**, cord anchor seat, nose shoulder + nose fairing |
+
+**The joint (z = 142.5 mm).** A stepped register on the **outside** of the wall,
+so the bore stays a continuous 32.80 mm — the motor can's sleeve, the nose cone's
+shoulder and the ejection charge all pass through untouched.
+
+* aft half: OD tapers 36.40 → 36.25 mm over the last 8 mm
+* fwd half: OD tapers 36.55 → 36.40 mm over the first 8 mm
+* at the joint plane the two faces butt with a **0.15 mm glue gap** per side
+* **4 keys** at 0/90/180/270°, 4 mm wide × 1.2 mm deep × 5 mm tall, rounded tops —
+  male pegs on the aft face, matching pockets in the fwd face, so the halves can
+  only go together one way
+* joint interference measured at **0.000000 mm³**
+
+**The mounting pads (the "inner diameter" mounting points).** Four pads on the
+**bore wall** of the forward half, at 45/135/225/315° (offset from the keys),
+z = 154–168 mm:
+
+* 30° arc (~8.6 mm wide) × **5.0 mm radial protrusion** × 14 mm long
+* each with an axial **M3 self-tapping pilot: 2.7 mm dia**, drilled from the aft
+  face, ~1 mm of material either side of the hole
+* free bore at the pads is **22.8 mm** (32.80 between them) — enough for gas and a
+  packed chute, and the price of putting the pads inside
+* their aft faces give you a flat 4-point mounting plane for a bulkhead or a
+  shock-cord plate, and a plate bolted there also backs up the glued joint
+
+Print the two halves in the modelled orientation (aft/register face down for the
+forward half, aft rim down for the aft half). No supports: the pads present a
+~6 × 5 mm horizontal underside each, which bridges.
+
 ## The three fits
 
 | mating part | what it needs | what this body gives | clearance |
@@ -94,7 +132,8 @@ you commit a 285 mm cut.
 | file | what |
 |---|---|
 | `build_body_36mm.py` | the source of truth: parametric, validates, builds, verifies against both mating parts, exports |
-| `body36.stl` | the body, **in print orientation** — aft face at z=0, 285 mm tall, drop it on the plate unrotated |
+| `body36_aft.stl` | aft half, print orientation — aft face at z=0, 142.5 mm tall |
+| `body36_fwd.stl` | forward half with the 4 mounting pads — print orientation, register face down, 142.5 mm tall |
 | `body36_cord_anchor.stl` | shock-cord anchor, print upright as modelled (2.4 g) |
 | `body36_gauge.stl` | 20 mm test coupon: one end has the aft rim, the other the forward rim. 4.3 g, ~20 min — **print this first** |
 | `body36.step` | all three parts, design orientation (aft face at z=0, +Z toward the nose) |
@@ -124,20 +163,28 @@ identical hashes), which is what makes the check meaningful.
 | 0 – 15 | where the motor can's 32.5 sleeve is glued in | bore 32.80 |
 | 0 – 102 | covered by the 36 mm fin can | OD 36.40 |
 | 0 – 76 | inside: the motor can's block ends 76 mm in | — |
-| 110 – 140 | cord anchor glues in (see Recovery) | bore 32.80, anchor throat 27.70 |
+| 108 – 138 | cord anchor glues in (see Recovery) | bore 32.80, anchor throat 27.70 |
+| 134.5 – 142.5 | **aft half ends**: register taper 36.40 → 36.25 mm, 4 male keys on the end face | OD 36.40 → 36.25 |
+| 142.5 | **glue joint** (split variant only) | 0.15 mm glue gap per side |
+| 142.5 – 150.5 | **fwd half starts**: register taper 36.55 → 36.40 mm, 4 keyways in the end face | OD 36.55 → 36.40 |
+| 154 – 168 | **4 mounting pads on the bore wall** (fwd half), M3 pilots | free bore 22.8 mm at the pads |
 | 270 – 285 | nose cone shoulder bay (fits the 32.5 × 15 shoulder) | bore 32.80 |
 | 281 – 285 | forward rim fairing 36.40 → 35.70 to meet the nose cone's base | rim wall 1.45 |
 | 285 | forward rim, 0.6 mm bore lead-in | OD 35.70 |
 
-Overall 285 mm, 36.40 OD, 32.80 bore, 1.80 wall. Volume 55.66 cm³, area 622.4 cm².
+Overall 285 mm, 36.40 OD, 32.80 bore, 1.80 wall. Volume 57.5 cm³ with the split
+register and four mounting pads (55.7 cm³ without them), area 622.4 cm².
 
 ## Printing
 
-* **Body:** upright, aft face on the bed, **no supports anywhere**. 0.2 mm
-  layers, 4 perimeters (the wall is four lines plus a gap-fill sliver — that is
-  the part), 0 % infill, 4-5 top/bottom layers, 5 mm brim (bed contact is a
-  1.80 mm annulus, 150.4 mm²). ~3-4 h.
+* **Body (split variant, two parts):** upright in the modelled orientation,
+  **no supports anywhere**. 0.2 mm layers, 4 perimeters (the wall is four lines
+  plus a gap-fill sliver — that is the part), 0 % infill, 4-5 top/bottom layers,
+  5 mm brim (bed contact is a 1.80 mm annulus, 150.4 mm² per half). ~2 h a half.
   PETG for preference, or ASA/ABS: the aft 100 mm wraps the motor.
+  The forward half goes register-face down — its bore opening is on the bed, so
+  the four mounting pads grow upwards from the wall with a ~6 × 5 mm underside
+  each, which bridges.
 * **Print the gauge first.** 20 minutes and 4.3 g tells you whether the fin can
   slips on and whether the motor can's sleeve and the nose shoulder enter,
   before you spend hours on the body. If the gauge is wrong, the fix is one
@@ -163,15 +210,22 @@ Overall 285 mm, 36.40 OD, 32.80 bore, 1.80 wall. Volume 55.66 cm³, area 622.4 c
    first (the gauge did that), sand the tube lightly if it drags, epoxy it. If a
    printed Rev C still feels loose, the fin can's bore is the part to re-mic —
    there is no room to widen the body further.
-4. **Cord anchor.** Glue at 110 mm up the tube (its aft face), 0.15 mm/side glue
+4. **Joint (split variant).** Dry-fit the halves: the 4 keys should drop into
+   their pockets with no force and the register faces should close to a
+   0.15 mm line all round. Epoxy both register faces, push together **rotating
+   until the keys seat**, and hold until green. Check the bore with the gauge —
+   the joint must not leave a lip inside. The four M3 pads in the forward half
+   are at z=154–168 mm, forward of the joint, so a plate screwed onto them also
+   bridges the glue line.
+5. **Cord anchor.** Glue at 108 mm up the tube (its aft face), 0.15 mm/side glue
    gap. Thread the shock cord in one 4 mm slot and out the other, over the 8 mm
    bridge, and knot it aft of the anchor. The cord then runs forward through the
    anchor's 27.70 mm throat into the chute bay.
-5. **Recovery.** Chute and wadding in the bay 140 → 270 mm, nose cone friction
+6. **Recovery.** Chute and wadding in the bay 140 → 270 mm, nose cone friction
    fit on its 32.5 × 15 shoulder. The bore is unbroken from the motor can's
    block at 76 mm all the way to the nose, so the ejection charge has a clear
    path (checked: min free diameter 32.80 mm through the whole bay).
-6. Tape or glue the cord anchor before the first flight, and pull-test it — it
+7. Tape or glue the cord anchor before the first flight, and pull-test it — it
    is the only thing holding the two halves together.
 
 The body wall is the airframe's airtight surface (there is no cardboard seam to
@@ -208,11 +262,12 @@ preference:
 |---|---|---|---|---|
 | A | 36.00 | 32.80 | 1.60 | as first printed; 0.30 mm/side fin-can slip |
 | B | 36.30 | 32.80 | 1.75 | +0.30 mm outside for the printed tube's fit; fin-can slip 0.15/side. Gauge, STLs and the launch lug all rebuilt |
+| D | 36.40 | 32.80 | 1.80 | **split build**: two halves, keyed glue joint at z=142.5, 4 M3 mounting pads on the bore wall (z=154–168). Adds ~1.8 cm³ |
 | **C** | **36.40** | 32.80 | **1.80** | +0.10 mm outside after the printed Rev B still felt loose in the fin can; slip now 0.10/side, the hard ceiling. Gauge, STLs and the launch lug rebuilt |
 
 ## What was verified
 
-22 checks, all passing on every build (`build_summary.json` carries them all
+30 checks, all passing on every build (`build_summary.json` carries them all
 with their details). The interesting ones:
 
 * **volume exact** — 55683.1 mm³ expected from the revolved tube + frustum minus
@@ -231,6 +286,14 @@ with their details). The interesting ones:
   0.5 mm oversize shoulder collides for 149.35 mm³;
 * **charge path**: a 1 mm scan of the bore from the motor can's block (76 mm) to
   the nose bay (270 mm) never finds material — min free diameter 32.80;
+* **split joint**: both halves are one valid solid each, z bounds 0–142.5 and
+  142.5–285.0 exactly, and the interference between them is **0.000000 mm³**;
+* **keys**: 4 male pegs on the aft face, 4 matching pockets in the forward face,
+  no interference, and they are the only things that can align the halves
+  rotationally;
+* **mounting pads**: 4 pads, free bore **22.8 mm** at each, all four M3 pilots
+  open (probed inside the hole), ~1 mm of material either side, clear of the
+  register at z=150.5 and of the anchor at z=138;
 * **printability from the solid's faces, not assumed**: the body has exactly
   two downward-facing faces (the bed ring; 150.4 mm² of contact) and **no
   off-bed downward face at all**, so no supports. The cord anchor's only

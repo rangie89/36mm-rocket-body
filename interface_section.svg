@@ -27,6 +27,6 @@
 <text x="34.0" y="50.5" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="11.5" fill="#7d5210" text-anchor="start" font-weight="400">36 mm 4-FIN CAN   bore 36.60 over the aft 102 mm  -> 0.10 mm/side slip</text>
 <text x="34.0" y="67.0" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="11.5" fill="#42582f" text-anchor="start" font-weight="400">18 mm MOTOR CAN   sleeve 32.50 x 15 into the bore (0.15/side), flange 36.00 on the rim</text>
 <text x="34.0" y="83.5" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="11.5" fill="#4a5b6b" text-anchor="start" font-weight="400">NOSE CONE   shoulder 32.50 x 15, base 35.70  (0.15/side), retention cap Ø35.00</text>
-<text x="34.0" y="100.0" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="11.5" fill="#1b2733" text-anchor="start" font-weight="400">overall 435 mm      printed body 70.7 g PETG / 69.0 g PLA</text>
+<text x="34.0" y="100.0" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="11.5" fill="#1b2733" text-anchor="start" font-weight="400">overall 435 mm      printed body 73.0 g PETG / 71.3 g PLA</text>
 <text x="34.0" y="548.0" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="10" fill="#6b7a88" text-anchor="start" font-weight="400">half section, axis at the bottom.  axial 2.30 px/mm, radial 6.30 px/mm (x2.7 exaggerated).  dimensions read from build_summary.json</text>
 </svg>

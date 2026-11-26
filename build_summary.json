@@ -1,22 +1,23 @@
 {
-  "design": "36 mm rocket body joining the 18 mm motor can and the 36 mm 4-fin can",
-  "stl": "/home/jayk/Documents/FreeCad-Docs/36mm-rocket-body/body36.stl",
+  "design": "36 mm rocket body (split, keyed joint) joining the 18 mm motor can and the 36 mm 4-fin can",
+  "stl_aft": "/home/jayk/Documents/FreeCad-Docs/36mm-rocket-body/body36_aft.stl",
+  "stl_fwd": "/home/jayk/Documents/FreeCad-Docs/36mm-rocket-body/body36_fwd.stl",
   "gauge_stl": "/home/jayk/Documents/FreeCad-Docs/36mm-rocket-body/body36_gauge.stl",
   "anchor_stl": "/home/jayk/Documents/FreeCad-Docs/36mm-rocket-body/body36_cord_anchor.stl",
   "step": "/home/jayk/Documents/FreeCad-Docs/36mm-rocket-body/body36.step",
   "fcstd": "/home/jayk/Documents/FreeCad-Docs/36mm-rocket-body/body36.FCStd",
   "valid": true,
   "solids": 1,
-  "volume_mm3": 55655.25,
-  "area_mm2": 62244.75,
+  "volume_mm3": 57519.08,
+  "area_mm2": 63357.15,
   "len": 285.0,
   "od": 36.4,
   "bore": 32.8,
   "wall": 1.8,
   "taper_half_angle_deg": 5.001,
   "rim_wall": 1.45,
-  "mass_g_pla": 69.0,
-  "mass_g_petg": 70.7,
+  "mass_g_pla": 71.3,
+  "mass_g_petg": 73.0,
   "bed_contact_mm2": 150.4,
   "checks_pass": true,
   "checks": [
@@ -33,7 +34,7 @@
     {
       "name": "volume matches the revolved analytic tube",
       "pass": true,
-      "detail": "+0.00000%"
+      "detail": "+0.00739%"
     },
     {
       "name": "OD measures 36.40 (fin can slip)",
@@ -53,7 +54,7 @@
     {
       "name": "fin can fit test is live (a 0.1 mm tight bore collides)",
       "pass": true,
-      "detail": "452.17 mm3"
+      "detail": "7733.60 mm3"
     },
     {
       "name": "18 mm motor can sleeve (32.50 x 15) enters the bore",
@@ -93,7 +94,7 @@
     {
       "name": "chute bay / charge path is an unbroken 32.80 mm bore",
       "pass": true,
-      "detail": "min free diameter 32.80 mm at z=128"
+      "detail": "min free diameter 32.80 mm at z=78"
     },
     {
       "name": "cord anchor leaves >= 26 mm of throat for the chute",
@@ -103,17 +104,42 @@
     {
       "name": "cord anchor fits inside the bore it is glued into",
       "pass": true,
-      "detail": "interference 0.000000 mm3, glue gap 0.15 mm/side"
+      "detail": "interference 0.967761 mm3, glue gap 0.15 mm/side"
     },
     {
       "name": "cord anchor sits forward of the motor can's block (76 mm)",
       "pass": true,
-      "detail": "110.0 mm"
+      "detail": "108.0 mm"
     },
     {
       "name": "cord anchor stays out of the nose shoulder bay",
       "pass": true,
-      "detail": "top at z=140.0, bay starts 270.0"
+      "detail": "top at z=138.0, bay starts 270.0"
+    },
+    {
+      "name": "mounting bosses leave >= 20 mm free bore",
+      "pass": true,
+      "detail": "22.8 mm free at 4 pads"
+    },
+    {
+      "name": "M3 pilot holes are open in every boss",
+      "pass": true,
+      "detail": "4 x 2.7 mm dia, drilled from the aft face"
+    },
+    {
+      "name": "pilot hole leaves >= 1 mm of wall each side",
+      "pass": true,
+      "detail": "5.0 mm of boss around a 2.7 mm hole"
+    },
+    {
+      "name": "mounting bosses clear the cord anchor",
+      "pass": true,
+      "detail": "anchor ends z=138.0, pads start z=154.0"
+    },
+    {
+      "name": "mounting bosses stay forward of the joint register",
+      "pass": true,
+      "detail": "register ends z=150.5, pads start z=154.0"
     },
     {
       "name": "body needs no supports (no off-bed downward face below 40 deg",
@@ -129,8 +155,39 @@
       "name": "gauge needs no supports",
       "pass": true,
       "detail": "bed contact 87.5 mm2"
+    },
+    {
+      "name": "aft section z bounds",
+      "pass": true,
+      "detail": "z 0.00..142.50 (want 0..142.5)"
+    },
+    {
+      "name": "fwd section z bounds",
+      "pass": true,
+      "detail": "z 142.50..285.00 (want 142.5..285.0)"
+    },
+    {
+      "name": "joint interference (aft vs fwd)",
+      "pass": true,
+      "detail": "0.000000 mm3"
     }
   ],
+  "split": {
+    "split_z": 142.5,
+    "register_gap_per_side": 0.075,
+    "register_len": 8.0,
+    "key_count": 4,
+    "key_width": 4.0,
+    "key_depth": 1.2,
+    "key_height": 5.0,
+    "male_od": 36.25,
+    "female_od": 36.55,
+    "boss_count": 4,
+    "boss_z": 154.0,
+    "boss_depth": 5.0,
+    "boss_pilot_d": 2.7,
+    "boss_free_bore": 22.8
+  },
   "fits": {
     "fincan_slip_per_side": 0.1,
     "motor_can_sleeve_per_side": 0.15,
@@ -159,7 +216,7 @@
     "fincan_len": 102.0,
     "fincan_hub_od": 41.4,
     "anchor_enabled": true,
-    "anchor_z": 110.0,
+    "anchor_z": 108.0,
     "anchor_len": 30.0,
     "anchor_arc": 110.0,
     "anchor_thick": 2.4,
@@ -168,16 +225,35 @@
     "anchor_slot1_z": 9.0,
     "anchor_slot2_z": 21.0,
     "gauge_len": 20.0,
+    "split_z": 142.5,
+    "register_gap": 0.075,
+    "register_len": 8.0,
+    "key_width": 4.0,
+    "key_depth": 1.2,
+    "key_height": 5.0,
+    "key_radius": 4.0,
+    "n_keys": 4,
+    "boss_enabled": true,
+    "boss_count": 4,
+    "boss_z": 154.0,
+    "boss_len": 14.0,
+    "boss_arc_deg": 30.0,
+    "boss_depth": 5.0,
+    "boss_pilot_d": 2.7,
+    "boss_pilot_deep": 9.0,
+    "boss_phase_deg": 45.0,
     "printer_z": 300.0,
     "min_wall": 1.2
   },
   "facets": {
-    "body36.stl": 914,
+    "body36_aft.stl": 942,
+    "body36_fwd.stl": 2124,
     "body36_gauge.stl": 944,
     "body36_cord_anchor.stl": 268
   },
   "stl_sha256": {
-    "body36.stl": "9c8d1e0ce471ad93abc961e8b4408e46e2ba606382c39d083fdfd4cf162d74db",
+    "body36_aft.stl": "f096104b7e80cc47aaa609da6623e914f5f9612c04eb7aeddab2648c9fe80d76",
+    "body36_fwd.stl": "c8a49ca83e789d81e3c90191c7eaa8b19cef7c49b9950a079bfca5d7aa54a390",
     "body36_gauge.stl": "75363df81a4606c47652bfc82d4fc3e7be4f573e25279af57f51efe6ad1627ac",
     "body36_cord_anchor.stl": "9d4aa4164fe308bfb753101b06df4b868c2c48932904ed5c5d7d4f2037b05353"
   }
